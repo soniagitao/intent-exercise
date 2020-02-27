@@ -25,8 +25,12 @@ import com.mobsandgeeks.saripaar.annotation.Password;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.List;
+import java.util.concurrent.locks.StampedLock;
 
 public class RegisterActivity extends AppCompatActivity implements Validator.ValidationListener {
+    private static final int GALLERY_REQUEST_CODE = 1;
+    private static final String TAG = RegisterActivity.class.getCanonicalName();
+
     public static final String NAME_KEY = "";
     public static final String EMAIL_KEY = "";
     public static final String PASSWORD_KEY ="";
@@ -34,11 +38,6 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
     public static final String HOME_KEY = "";
     public static final String ABOUT_KEY = "";
 
-    private static final int GALLERY_REQUEST_CODE = 1;
-    private static final String TAG = RegisterActivity.class.getCanonicalName();
-
-    private Button okButton;
-    private ImageView avatarImage;
 
     @NotEmpty
     private EditText nameEditText;
@@ -61,50 +60,55 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
     @NotEmpty
     private EditText aboutEditText;
 
+    private ImageView avatarImage;
+    protected Validator validator;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        Validator validator = new Validator(this);
+        validator.setValidationListener(this);
+
         nameEditText = findViewById(R.id.text_fullname);
         emailEditText = findViewById(R.id.text_email);
         passwordEditText = findViewById(R.id.text_password);
         confirmPasswordEditText = findViewById(R.id.text_confirm_password);
         homePageEditText = findViewById(R.id.text_homepage);
         aboutEditText = findViewById(R.id.text_about);
-        okButton = findViewById(R.id.button_ok);
-
-        Validator validator = new Validator(this);
-        validator.setValidationListener(this);
+        avatarImage = findViewById(R.id.image_profile);
 
     }
 
 
     @Override
     public void onValidationSucceeded() {
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = nameEditText.getText().toString();
-                String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-                String confirm = confirmPasswordEditText.getText().toString();
-                String home = homePageEditText.getText().toString();
-                String about = aboutEditText.getText().toString();
+        String fullname = nameEditText.getText().toString();
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        String confirmpassword = confirmPasswordEditText.getText().toString();
+        String homepage = homePageEditText.getText().toString();
+        String about = aboutEditText.getText().toString();
 
-                Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
 
-                intent.putExtra(NAME_KEY,name);
-                intent.putExtra(EMAIL_KEY,email);
-                intent.putExtra(PASSWORD_KEY,password);
-                intent.putExtra(CONFIRM_KEY,confirm);
-                intent.putExtra(HOME_KEY,home);
-                intent.putExtra(ABOUT_KEY,about);
+        avatarImage.setDrawingCacheEnabled(true);
+        Bitmap b = avatarImage.getDrawingCache();
 
-                startActivity(intent);
-            }
-        });
+        Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
+
+        intent.putExtra(NAME_KEY,fullname);
+        intent.putExtra(EMAIL_KEY,email);
+        intent.putExtra(PASSWORD_KEY,password);
+        intent.putExtra(CONFIRM_KEY,confirmpassword);
+        intent.putExtra(HOME_KEY, homepage);
+        intent.putExtra(ABOUT_KEY,about);
+        intent.putExtra("Bitmap", b);
+
+        startActivity(intent);
     }
+
 
     @Override
     public void onValidationFailed(List<ValidationError> errors) {
@@ -147,8 +151,10 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
     public void handleChangeAvatar(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, GALLERY_REQUEST_CODE);
-
     }
 
 
+    public void handleOk(View view) {
+        validator.validate();
+    }
 }
