@@ -31,12 +31,12 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
     private static final int GALLERY_REQUEST_CODE = 1;
     private static final String TAG = RegisterActivity.class.getCanonicalName();
 
-    public static final String NAME_KEY = "";
-    public static final String EMAIL_KEY = "";
-    public static final String PASSWORD_KEY ="";
-    public static final String CONFIRM_KEY = "";
-    public static final String HOME_KEY = "";
-    public static final String ABOUT_KEY = "";
+    public static final String NAME_KEY = "fullname";
+    public static final String EMAIL_KEY = "email";
+    public static final String PASSWORD_KEY ="password";
+    public static final String CONFIRM_KEY = "confirmpassword";
+    public static final String HOME_KEY = "homepage";
+    public static final String ABOUT_KEY = "about";
 
 
     @NotEmpty
@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        Validator validator = new Validator(this);
+        validator = new Validator(this);
         validator.setValidationListener(this);
 
         nameEditText = findViewById(R.id.text_fullname);
@@ -79,7 +79,6 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
         homePageEditText = findViewById(R.id.text_homepage);
         aboutEditText = findViewById(R.id.text_about);
         avatarImage = findViewById(R.id.image_profile);
-
     }
 
 
@@ -92,11 +91,10 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
         String homepage = homePageEditText.getText().toString();
         String about = aboutEditText.getText().toString();
 
-
         avatarImage.setDrawingCacheEnabled(true);
         Bitmap b = avatarImage.getDrawingCache();
 
-        Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(this, ProfileActivity.class);
 
         intent.putExtra(NAME_KEY,fullname);
         intent.putExtra(EMAIL_KEY,email);

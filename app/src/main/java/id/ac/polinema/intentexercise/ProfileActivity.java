@@ -7,22 +7,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mobsandgeeks.saripaar.ValidationError;
-import com.mobsandgeeks.saripaar.Validator;
-import com.mobsandgeeks.saripaar.annotation.Checked;
-import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
-import com.mobsandgeeks.saripaar.annotation.Email;
-import com.mobsandgeeks.saripaar.annotation.NotEmpty;
-import com.mobsandgeeks.saripaar.annotation.Password;
-
-import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity  {
     private TextView name;
@@ -42,7 +29,6 @@ public class ProfileActivity extends AppCompatActivity  {
         home = findViewById(R.id.label_homepage);
         about = findViewById(R.id.label_about);
         imageProfil = findViewById(R.id.image_profile);
-
 
         Bundle extras = getIntent().getExtras();
 
